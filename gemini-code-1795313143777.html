@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الموقع</title>
+  <style>
+    /* تنسيق بسيط لنافذة عرض الفيديو عند الضغط على أي زر أو كارت */
+    .video-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .video-modal.active {
+      display: flex;
+    }
+    .modal-content {
+      position: relative;
+      width: 90%;
+      max-width: 800px;
+      background: #000;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      left: 15px;
+      color: #fff;
+      font-size: 28px;
+      cursor: pointer;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. روابط الصفحات الداخلية (لازم تبدأ بـ ./ واسم الملف يكون مطابق تماماً) -->
+  <nav>
+    <a href="./index.html">الرئيسية</a>
+    <a href="./about.html">من نحن</a>
+    <a href="./contact.html">تواصل معنا</a>
+  </nav>
+
+  <!-- 2. أزرار أو كروت تفتح فيديو عند الضغط عليها -->
+  <button onclick="openVideo('./videos/video1.mp4')">شغّل الفيديو الأول</button>
+  <button onclick="openVideo('./videos/video2.mp4')">شغّل الفيديو الثاني</button>
+
+  <!-- 3. نافذة عرض الفيديو المنبثقة (Modal) -->
+  <div id="videoModal" class="video-modal" onclick="closeVideo(event)">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeVideo(event, true)">&times;</span>
+      <video id="modalPlayer" controls playsinline style="width: 100%; display: block;">
+        <source id="videoSource" src="" type="video/mp4">
+        المتصفح لا يدعم تشغيل الفيديو.
+      </video>
+    </div>
+  </div>
+
+  <script>
+    // دالة فتح أي فيديو عند الضغط على الزر الخاص به
+    function openVideo(videoPath) {
+      const modal = document.getElementById('videoModal');
+      const player = document.getElementById('modalPlayer');
+      const source = document.getElementById('videoSource');
+
+      source.src = videoPath;
+      player.load(); // مهم جداً لإعادة تحميل المسار الجديد
+      modal.classList.add('active');
+      player.play().catch(err => console.log("اضغط تشغيل لبدء الفيديو:", err));
+    }
+
+    // دالة إغلاق الفيديو وإيقاف الصوت
+    function closeVideo(event, forceClose = false) {
+      if (forceClose || event.target.id === 'videoModal') {
+        const modal = document.getElementById('videoModal');
+        const player = document.getElementById('modalPlayer');
+        player.pause();
+        player.currentTime = 0;
+        modal.classList.remove('active');
+      }
+    }
+  </script>
+
+</body>
+</html>

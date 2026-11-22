@@ -1,0 +1,14 @@
+<!-- حالة 1: ملف فيديو مرفوع على الاستضافة -->
+<video controls preload="metadata" playsinline style="width: 100%; max-width: 720px; border-radius: 8px;">
+  <source src="./videos/your-video.mp4" type="video/mp4">
+  المتصفح لا يدعم تشغيل الفيديو.
+</video>
+
+<!-- حالة 2: تضمين فيديو من YouTube -->
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe
+    src="https://www.youtube.com/embed/VIDEO_ID"
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+    allowfullscreen>
+  </iframe>
+</div>
