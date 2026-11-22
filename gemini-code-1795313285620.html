@@ -1,0 +1,14 @@
+<!-- مثال لضمان عمل رابط أو زر ينفذ إجراءً عبر JavaScript -->
+<a href="#action" id="myBtn" class="btn">اضغطي هنا</a>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const btn = document.getElementById("myBtn");
+    if (btn) {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        // ضعي هنا الكود المطلوب تنفيذه عند الضغط
+      });
+    }
+  });
+</script>
