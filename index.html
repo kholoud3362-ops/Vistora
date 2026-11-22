@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VISTORA | Digital Creative Agency &amp; Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter, Plus Jakarta Sans & Caveat (for cursive script) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=Inter:wght@300;400;500;600;700;800&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet">
+    <!-- Font Awesome for crisp icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                        script: ['Caveat', 'cursive'],
+                    },
+                    colors: {
+                        vistora: {
+                            dark: '#030b1c',
+                            navy: '#07142e',
+                            card: '#0a1c3f',
+                            cyan: '#00e5ff',
+                            cyanHover: '#00c4db',
+                            blueGlow: '#1a56db',
+                        }
+                    },
+                    boxShadow: {
+                        'cyan-glow': '0 0 25px rgba(0, 229, 255, 0.35)',
+                        'cyan-sm': '0 0 12px rgba(0, 229, 255, 0.25)',
+                        'card-hover': '0 10px 30px -5px rgba(0, 229, 255, 0.2)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #030b1c;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .hero-bg {
+            background:
+                radial-gradient(circle at 75% 35%, rgba(0, 229, 255, 0.22) 0%, rgba(26, 86, 219, 0.15) 35%, transparent 65%),
+                radial-gradient(circle at 15% 20%, rgba(0, 140, 255, 0.12) 0%, transparent 50%),
+                linear-gradient(180deg, #040e24 0%, #061533 60%, #030b1c 100%);
+        }
+
+        .glass-nav {
+            background: rgba(4, 14, 36, 0.85);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(0, 229, 255, 0.12);
+        }
+
+        .service-card {
+            background: linear-gradient(180deg, rgba(11, 29, 66, 0.75) 0%, rgba(6, 18, 43, 0.9) 100%);
+            border: 1px solid rgba(0, 229, 255, 0.22);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .service-card:hover {
+            border-color: #00e5ff;
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(0, 229, 255, 0.2);
+            background: linear-gradient(180deg, rgba(14, 38, 84, 0.9) 0%, rgba(8, 23, 54, 0.95) 100%);
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.75; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.03); }
+        }
+        .animate-glow {
+            animation: pulseGlow 4s ease-in-out infinite;
+        }
+
+        body.edit-mode-active [data-editable="true"] {
+            outline: 1.5px dashed #00e5ff;
+            outline-offset: 4px;
+            border-radius: 6px;
+            cursor: text;
+            transition: background-color 0.2s;
+        }
+        body.edit-mode-active [data-editable="true"]:hover,
+        body.edit-mode-active [data-editable="true"]:focus {
+            background-color: rgba(0, 229, 255, 0.12);
+            outline: 2px solid #00e5ff;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030b1c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0d2b5c;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00e5ff;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-vistora-cyan selection:text-vistora-dark">
+
+    <!-- Top Edit Mode Banner -->
+    <div id="editBanner" class="hidden fixed top-0 left-0 right-0 z-[60] bg-gradient-to-r from-cyan-600 via-vistora-cyan to-blue-600 text-vistora-dark px-4 py-2.5 shadow-lg">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm font-semibold">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-pen-to-square text-base"></i>
+                <span><strong>Edit Mode Active:</strong> Click any text on the page to edit directly, or update media/links below.</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="openMediaManagerModal()" class="bg-vistora-dark text-white hover:bg-slate-800 px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-photo-film text-vistora-cyan"></i> Edit Videos, Images &amp; Social Links
+                </button>
+                <button onclick="exportReadyHtml()" class="bg-emerald-950 text-emerald-200 hover:bg-emerald-900 px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-download"></i> Download Ready Site (.html)
+                </button>
+                <button onclick="toggleEditMode()" class="bg-white/90 hover:bg-white text-vistora-dark px-3 py-1.5 rounded-lg transition">
+                    Done
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <header id="mainHeader" class="fixed top-0 left-0 right-0 z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="#home" class="flex items-center gap-3 group">
+                    <div class="w-11 h-11 flex items-center justify-center">
+                        <svg viewBox="0 0 64 56" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-[0_0_10px_rgba(0,229,255,0.6)] group-hover:scale-105 transition-transform">
+                            <path d="M4 8H20L32 33L24 49L4 8Z" fill="url(#vGrad1)"></path>
+                            <path d="M44 8H60L36 52H22L44 8Z" fill="url(#vGrad2)"></path>
+                            <path d="M35 8H45L39 20H29L35 8Z" fill="#7df9ff"></path>
+                            <defs>
+                                <linearGradient id="vGrad1" x1="4" y1="8" x2="32" y2="49" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#00E5FF"></stop>
+                                    <stop offset="1" stop-color="#0284C7"></stop>
+                                </linearGradient>
+                                <linearGradient id="vGrad2" x1="60" y1="8" x2="22" y2="52" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#38BDF8"></stop>
+                                    <stop offset="1" stop-color="#00E5FF"></stop>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="flex flex-col">
+                        <span data-editable="true" class="font-display font-extrabold text-2xl tracking-[0.14em] text-white leading-none">VISTORA</span>
+                        <span data-editable="true" class="text-[9px] sm:text-[10px] tracking-[0.22em] text-cyan-300/90 font-medium mt-1 uppercase">DIGITAL CREATIVE AGENCY</span>
+                    </div>
+                </a>
+
+                <nav class="hidden lg:flex items-center gap-7 text-sm font-medium">
+                    <a href="#home" class="nav-link text-white relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-vistora-cyan">Home</a>
+                    <a href="#services" class="nav-link text-slate-300 hover:text-vistora-cyan transition">Services</a>
+                    <a href="#projects" class="nav-link text-slate-300 hover:text-vistora-cyan transition">Portfolio &amp; Projects</a>
+                    <a href="#video-showcase" class="nav-link text-slate-300 hover:text-vistora-cyan transition">Creative Lab &amp; Videos</a>
+                    <a href="#contact" class="nav-link text-slate-300 hover:text-vistora-cyan transition">Contact &amp; Services</a>
+                </nav>
+
+                <div class="hidden sm:flex items-center gap-3">
+                    <button onclick="toggleEditMode()" title="Customize text, videos &amp; links" class="px-3.5 py-2 rounded-full border border-cyan-400/40 bg-cyan-950/40 hover:bg-cyan-900/60 text-cyan-300 text-xs font-semibold transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-sliders"></i>
+                        <span>Customize</span>
+                    </button>
+                    <a href="#contact" class="bg-vistora-cyan hover:bg-vistora-cyanHover text-vistora-dark font-bold text-sm px-6 py-2.5 rounded-full shadow-cyan-glow transition transform hover:scale-105 flex items-center gap-2">
+                        <span>Let's Talk</span>
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </a>
+                </div>
+
+                <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="lg:hidden p-2.5 rounded-xl border border-cyan-500/30 text-cyan-300 hover:bg-cyan-950/50">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobileMenu" class="lg:hidden bg-[#040e24]/95 border-b border-cyan-500/20 px-4 pt-3 pb-6 space-y-3 hidden">
+            <a href="#home" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg text-white font-medium bg-cyan-950/50">Home</a>
+            <a href="#services" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg text-slate-300 hover:text-vistora-cyan">Services (7 Specialties)</a>
+            <a href="#projects" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg text-slate-300 hover:text-vistora-cyan">Portfolio &amp; Projects</a>
+            <a href="#video-showcase" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg text-slate-300 hover:text-vistora-cyan">Creative Lab &amp; Videos</a>
+            <a href="#contact" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg text-slate-300 hover:text-vistora-cyan">Contact &amp; Services</a>
+            <div class="pt-2 flex flex-wrap gap-2">
+                <button onclick="toggleMobileMenu(); toggleEditMode();" class="flex-1 py-2.5 px-4 rounded-full border border-cyan-400/50 text-cyan-300 text-sm font-semibold text-center">
+                    <i class="fa-solid fa-pen-to-square mr-1"></i> Customize Page
+                </button>
+                <a href="#contact" onclick="toggleMobileMenu()" class="flex-1 py-2.5 px-4 rounded-full bg-vistora-cyan text-vistora-dark text-sm font-bold text-center">
+                    Let's Talk
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="home" class="hero-bg relative pt-28 pb-16 lg:pt-36 lg:pb-24 overflow-hidden">
+        <div class="absolute top-24 right-10 w-80 h-80 bg-vistora-cyan/15 rounded-full blur-[110px] pointer-events-none"></div>
+        <div class="absolute bottom-10 left-10 w-72 h-72 bg-blue-600/20 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+                <div class="lg:col-span-6 space-y-6 text-left">
+                    <div class="w-14 h-1 bg-vistora-cyan rounded-full shadow-cyan-sm"></div>
+
+                    <h1 class="font-display font-extrabold text-4xl sm:text-5xl lg:text-[3.65rem] leading-[1.12] tracking-tight text-white">
+                        <span data-editable="true">Ideas. Innovation.</span><br class="hidden sm:inline">
+                        <span data-editable="true" class="text-vistora-cyan drop-shadow-[0_0_20px_rgba(0,229,255,0.35)]">Impact.</span>
+                    </h1>
+
+                    <p data-editable="true" class="text-slate-200/90 text-lg sm:text-xl max-w-xl leading-relaxed font-normal">
+                        Turn creative ideas into powerful digital experiences with VISTORA. Transforming brands through AI, Digital Marketing, Creative Design &amp; Data Analytics.
+                    </p>
+
+                    <div class="flex flex-wrap items-center gap-4 pt-2">
+                        <a href="#projects" class="bg-vistora-cyan hover:bg-vistora-cyanHover text-vistora-dark font-bold px-7 py-3.5 rounded-full shadow-cyan-glow transition transform hover:scale-105 flex items-center gap-2.5 text-sm sm:text-base">
+                            <span>Explore Our Work</span>
+                            <i class="fa-solid fa-chevron-right text-xs"></i>
+                        </a>
+
+                        <button onclick="openVideoModal()" class="group flex items-center gap-3.5 px-5 py-3 rounded-full hover:bg-white/5 transition text-white font-semibold text-sm sm:text-base">
+                            <span class="w-11 h-11 rounded-full border-2 border-white/80 group-hover:border-vistora-cyan group-hover:bg-vistora-cyan/20 flex items-center justify-center transition shadow-md">
+                                <i class="fa-solid fa-play text-white group-hover:text-vistora-cyan ml-0.5 text-sm"></i>
+                            </span>
+                            <span data-editable="true">Watch Video</span>
+                        </button>
+                    </div>
+
+                    <div class="pt-4 flex flex-wrap items-center gap-3 text-xs text-cyan-200/80">
+                        <span class="px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/25 flex items-center gap-1.5">
+                            <i class="fa-solid fa-robot text-vistora-cyan"></i> AI &amp; Tech
+                        </span>
+                        <span class="px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/25 flex items-center gap-1.5">
+                            <i class="fa-solid fa-bullhorn text-vistora-cyan"></i> Digital &amp; Social Marketing
+                        </span>
+                        <span class="px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/25 flex items-center gap-1.5">
+                            <i class="fa-solid fa-chart-pie text-vistora-cyan"></i> Power BI &amp; Office
+                        </span>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 relative">
+                    <div class="relative mx-auto max-w-xl">
+                        <div class="relative rounded-2xl overflow-hidden border border-cyan-400/30 shadow-[0_20px_60px_rgba(0,229,255,0.22)] bg-[#061636] group">
+                            <img id="heroWorkspaceImg" src="https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" onerror="this.src='https://placehold.co/900x560/071a3e/00e5ff?text=VISTORA+Digital+Creative+Workspace'" alt="VISTORA Futuristic Workspace" class="w-full h-[300px] sm:h-[360px] object-cover opacity-80 group-hover:scale-105 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-tr from-[#030b1c]/90 via-[#061d47]/45 to-cyan-500/20"></div>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center p-6 pointer-events-none">
+                                <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-[#04122c]/80 backdrop-blur-md border border-vistora-cyan/50 flex items-center justify-center shadow-cyan-glow animate-glow">
+                                    <svg viewBox="0 0 64 56" fill="none" class="w-12 h-12 sm:w-14 sm:h-14">
+                                        <path d="M4 8H20L32 33L24 49L4 8Z" fill="#00E5FF"></path>
+                                        <path d="M44 8H60L36 52H22L44 8Z" fill="#38BDF8"></path>
+                                    </svg>
+                                </div>
+                                <button onclick="openVideoModal()" class="pointer-events-auto mt-4 px-4 py-1.5 rounded-full bg-vistora-dark/85 border border-vistora-cyan/60 text-vistora-cyan text-xs font-semibold hover:bg-vistora-cyan hover:text-vistora-dark transition flex items-center gap-2 shadow-lg">
+                                    <i class="fa-solid fa-circle-play"></i> Play Agency Showreel
+                                </button>
+                            </div>
+                            <div class="absolute top-4 right-5 text-right pointer-events-none select-none transform -rotate-6">
+                                <p data-editable="true" class="font-script text-2xl sm:text-3xl text-white/95 leading-[0.95] drop-shadow-[0_2px_10px_rgba(0,229,255,0.6)]">
+                                    Create<br>Grow<br>Innovate
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="hidden sm:flex items-center gap-3 absolute -bottom-5 -left-5 bg-[#071838]/95 backdrop-blur-md border border-cyan-400/35 px-4 py-3 rounded-2xl shadow-xl">
+                            <div class="w-10 h-10 rounded-xl bg-vistora-cyan/15 border border-vistora-cyan/40 flex items-center justify-center text-vistora-cyan">
+                                <i class="fa-solid fa-bolt"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs text-slate-300">All-in-One Portfolio</div>
+                                <div class="text-sm font-bold text-white">7 Integrated Solutions</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-12 lg:mt-16">
+            <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-8 sm:h-12">
+                <path d="M0 40C360 0 720 60 1080 25C1260 8 1380 20 1440 30V60H0V40Z" fill="#030b1c"></path>
+                <path d="M0 40C360 0 720 60 1080 25C1260 8 1380 20 1440 30" stroke="url(#waveCyan)" stroke-width="2" stroke-opacity="0.45"></path>
+                <defs>
+                    <linearGradient id="waveCyan" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#030b1c"></stop>
+                        <stop offset="0.5" stop-color="#00e5ff"></stop>
+                        <stop offset="1" stop-color="#030b1c"></stop>
+                    </linearGradient>
+                </defs>
+            </svg>
+        </div>
+    </section>
+
+    <!-- OUR SERVICES SECTION -->
+    <section id="services" class="py-14 sm:py-20 bg-[#030b1c] relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <div class="flex items-center justify-center gap-4 mb-2">
+                    <span class="w-12 sm:w-20 h-[2px] bg-gradient-to-r from-transparent to-vistora-cyan"></span>
+                    <h2 data-editable="true" class="font-display font-bold text-3xl sm:text-4xl text-white tracking-tight">Our Services</h2>
+                    <span class="w-12 sm:w-20 h-[2px] bg-gradient-to-l from-transparent to-vistora-cyan"></span>
+                </div>
+                <p data-editable="true" class="text-slate-300/85 text-sm sm:text-base">
+                    Comprehensive digital, creative, AI, and analytical solutions to help your brand grow
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div onclick="openServiceDetail(0)" class="service-card rounded-2xl p-6 text-center cursor-pointer group flex flex-col items-center justify-between">
+                    <div class="w-full flex flex-col items-center">
+                        <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-400/30 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-vistora-cyan/20 transition">
+                            <i class="fa-solid fa-microchip text-2xl text-vistora-cyan"></i>
+                        </div>
+                        <h3 data-editable="true" class="font-display font-bold text-lg text-white mb-2 group-hover:text-vistora-cyan transition">AI &amp; Technology</h3>
+                        <p data-editable="true" class="text-slate-300/80 text-xs sm:text-sm leading-relaxed">
+                            AI-powered workflows, smart automation, prompt engineering &amp; modern tech solutions.
+                        </p>
+                    </div>
+                    <span class="mt-4 text-xs font-semibold text-vistora-cyan opacity-80 group-hover:opacity-100 flex items-center gap-1">
+                        Explore Details <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </span>
+                </div>
+
+                <div onclick="openServiceDetail(1)" class="service-card rounded-2xl p-6 text-center cursor-pointer group flex flex-col items-center justify-between">
+                    <div class="w-full flex flex-col items-center">
+                        <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-400/30 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-vistora-cyan/20 transition">
+                            <i class="fa-solid fa-chart-line text-2xl text-vistora-cyan"></i>
+                        </div>
+                        <h3 data-editable="true" class="font-display font-bold text-lg text-white mb-2 group-hover:text-vistora-cyan transition">Digital Marketing</h3>
+                        <p data-editable="true" class="text-slate-300/80 text-xs sm:text-sm leading-relaxed">
+                            Grow your brand with smart SEO, SEM, paid campaigns &amp; data-driven growth strategies.
+                        </p>
+                    </div>
+                    <span class="mt-4 text-xs font-semibold text-vistora-cyan opacity-80 group-hover:opacity-100 flex items-center gap-1">
+                        Explore Details <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </span>
+                </div>
+
+                <div onclick="openServiceDetail(2)" class="service-card rounded-2xl p-6 text-center cursor-pointer group flex flex-col items-center justify-between">
+                    <div class="w-full flex flex-col items-center">
+                        <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-400/30 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-vistora-cyan/20 transition">
+                            <i class="fa-solid fa-bullhorn text-2xl text-vistora-cyan"></i>
+                        </div>
+                        <h3 data-editable="true" class="font-display font-bold text-lg text-white mb-2 group-hover:text-vistora-cyan transition">Social Media Marketing</h3>
+                        <p data-editable="true" class="text-slate-300/80 text-xs sm:text-sm leading-relaxed">
+                            Engage, connect, and grow across LinkedIn, Instagram, Facebook &amp; video platforms.
+                        </p>
+                    </div>
+                    <span class="mt-4 text-xs font-semibold text-vistora-cyan opacity-80 group-hover:opacity-100 flex items-center gap-1">
+                        Explore Details <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </span>
+                </div>
+
+                <div onclick="openServiceDetail(3)" class="service-card rounded-2xl p-6 text-center cursor-pointer group flex flex-col items-center justify-between">
+                    <div class="w-full flex flex-col items-center">
+                        <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-400/30 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-vistora-cyan/20 transition">
+                            <i class="fa-solid fa-palette text-2xl text-vistora-cyan"></i>
+                        </div>
+                        <h3 data-editable="true" class="font-display font-bold text-lg text-white mb-2 group-hover:text-vistora-cyan transition">Advertising &amp; Creative Design</h3>
+                        <p data-editable="true" class="text-slate-300/80 text-xs sm:text-sm leading-relaxed">
+                            Bring your ideas to life with stunning branding, ad creatives, posters &amp; motion visuals.
+                        </p>
+                    </div>
+                    <span class="mt-4 text-xs font-semibold text-vistora-cyan opacity-80 group-hover:opacity-100 flex items-center gap-1">
+                        Explore Details <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </span>
+                </div>
+
+                <div onclick="openServiceDetail(4)" class="service-card rounded-2xl p-6 text-center cursor-pointer group flex flex-col items-center justify-between">
+                    <div class="w-full flex flex-col items-center">
+                        <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-400/30 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-vistora-cyan/20 transition">
+                            <i class="fa-solid fa-chart-column text-2xl text-vistora-cyan"></i>
+                        </div>
+                        <h3 data-editable="true" class="font-display font-bold text-lg text-white mb-2 group-hover:text-vistora-cyan transition">Microsoft Office &amp; Power BI</h3>
+                        <p data-editable="true" class="text-slate-300/80 text-xs sm:text-sm leading-relaxed">
+                            Turn raw data into interactive Power BI dashboards, Excel models &amp; executive presentations.
+                        </p>
+                    </div>
+                    <span class="mt-4 text-xs font-semibold text-vistora-cyan opacity-80 group-hover:opacity-100 flex items-center gap-1">
+                        Explore Details <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </span>
+                </div>
+
+                <a href="#projects" class="service-card rounded-2xl p-6 text-center cursor-pointer group flex flex-col items-center justify-between">
+                    <div class="w-full flex flex-col items-center">
+                        <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-400/30 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-vistora-cyan/20 transition">
+                            <i class="fa-solid fa-layer-group text-2xl text-vistora-cyan"></i>
+                        </div>
+                        <h3 data-editable="true" class="font-display font-bold text-lg text-white mb-2 group-hover:text-vistora-cyan transition">Portfolio &amp; Projects</h3>
+                        <p data-editable="true" class="text-slate-300/80 text-xs sm:text-sm leading-relaxed">
+                            Explore real-world case studies, visual showcases, interactive dashboards &amp; video reels.
+                        </p>
+                    </div>
+                    <span class="mt-4 text-xs font-semibold text-vistora-cyan opacity-80 group-hover:opacity-100 flex items-center gap-1">
+                        Jump to Gallery <i class="fa-solid fa-arrow-down text-[10px]"></i>
+                    </span>
+                </a>
+
+                <a href="#contact" class="service-card sm:col-span-2 rounded-2xl p-6 text-left cursor-pointer group flex flex-col sm:flex-row items-center justify-between gap-5 bg-gradient-to-r from-[#0b2047] to-[#081736]">
+                    <div class="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4">
+                        <div class="w-14 h-14 shrink-0 rounded-2xl bg-vistora-cyan/15 border border-vistora-cyan/40 flex items-center justify-center group-hover:scale-110 transition">
+                            <i class="fa-solid fa-handshake-angle text-2xl text-vistora-cyan"></i>
+                        </div>
+                        <div>
+                            <h3 data-editable="true" class="font-display font-bold text-lg text-white mb-1.5 group-hover:text-vistora-cyan transition">Contact &amp; Services</h3>
+                            <p data-editable="true" class="text-slate-300/85 text-xs sm:text-sm leading-relaxed max-w-md">
+                                Ready to collaborate on LinkedIn or launch your next campaign? Request a custom service package or book a direct consultation.
+                            </p>
+                        </div>
+                    </div>
+                    <span class="shrink-0 bg-vistora-cyan text-vistora-dark font-bold text-xs px-5 py-2.5 rounded-full shadow-cyan-sm group-hover:scale-105 transition flex items-center gap-1.5">
+                        Get in Touch <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- PORTFOLIO & PROJECTS SECTION -->
+    <section id="projects" class="py-16 sm:py-20 bg-gradient-to-b from-[#030b1c] via-[#05122b] to-[#030b1c] relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-8">
+                <div class="flex items-center justify-center gap-4 mb-2">
+                    <span class="w-12 sm:w-20 h-[2px] bg-gradient-to-r from-transparent to-vistora-cyan"></span>
+                    <h2 data-editable="true" class="font-display font-bold text-3xl sm:text-4xl text-white tracking-tight">Our Projects</h2>
+                    <span class="w-12 sm:w-20 h-[2px] bg-gradient-to-l from-transparent to-vistora-cyan"></span>
+                </div>
+                <p data-editable="true" class="text-slate-300/85 text-sm sm:text-base">
+                    A glimpse of our creative work, marketing campaigns, AI visuals &amp; Power BI analytics
+                </p>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-2.5 mb-10">
+                <button onclick="filterProjects('all', this)" class="filter-btn active px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-vistora-cyan text-vistora-dark shadow-cyan-sm transition">
+                    All Projects
+                </button>
+                <button onclick="filterProjects('branding', this)" class="filter-btn px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-[#0a1c3f] text-slate-300 border border-cyan-500/25 hover:border-vistora-cyan transition">
+                    Creative &amp; Branding
+                </button>
+                <button onclick="filterProjects('analytics', this)" class="filter-btn px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-[#0a1c3f] text-slate-300 border border-cyan-500/25 hover:border-vistora-cyan transition">
+                    Power BI &amp; Office
+                </button>
+                <button onclick="filterProjects('marketing', this)" class="filter-btn px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-[#0a1c3f] text-slate-300 border border-cyan-500/25 hover:border-vistora-cyan transition">
+                    Digital &amp; Social Marketing
+                </button>
+                <button onclick="filterProjects('ai', this)" class="filter-btn px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-[#0a1c3f] text-slate-300 border border-cyan-500/25 hover:border-vistora-cyan transition">
+                    AI &amp; Technology
+                </button>
+            </div>
+
+            <div id="projectsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+            <div class="mt-10 flex justify-center">
+                <button onclick="toggleExtraProjects()" id="viewAllBtn" class="px-7 py-3 rounded-full border border-vistora-cyan/60 bg-[#071836]/80 hover:bg-vistora-cyan hover:text-vistora-dark text-white font-semibold text-sm transition flex items-center gap-2.5 shadow-cyan-sm">
+                    <span id="viewAllText">View All Projects</span>
+                    <i class="fa-solid fa-chevron-right text-xs"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- VIDEO & MEDIA SHOWCASE SECTION -->
+    <section id="video-showcase" class="py-16 sm:py-20 bg-[#030b1c] border-t border-cyan-500/15">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+                <div>
+                    <span class="text-vistora-cyan text-xs font-bold uppercase tracking-widest">Creative Lab &amp; Video Reels</span>
+                    <h2 data-editable="true" class="font-display font-bold text-3xl sm:text-4xl text-white mt-1">Featured Videos &amp; Visual Showcases</h2>
+                </div>
+                <button onclick="openMediaManagerModal()" class="self-start md:self-auto px-4 py-2 rounded-full border border-cyan-400/40 bg-cyan-950/40 hover:bg-cyan-900/60 text-cyan-300 text-xs font-semibold transition flex items-center gap-2">
+                    <i class="fa-solid fa-video"></i> Add / Change Your Video Links
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div class="lg:col-span-7">
+                    <div class="relative rounded-2xl overflow-hidden border border-cyan-400/35 bg-[#071736] shadow-2xl group">
+                        <div class="aspect-video relative">
+                            <video id="featuredShowcaseVideo" class="w-full h-full object-cover" controls poster="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&amp;fit=crop&amp;w=1200&amp;q=80">
+                                <source id="featuredVideoSource" src="https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-futuristic-devices-99786-large.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <div class="p-4 sm:p-5 bg-[#06132c] border-t border-cyan-500/20 flex flex-wrap items-center justify-between gap-3">
+                            <div>
+                                <h3 id="featuredVideoTitle" data-editable="true" class="font-bold text-white text-base sm:text-lg">VISTORA Digital &amp; AI Showreel 2025</h3>
+                                <p id="featuredVideoDesc" data-editable="true" class="text-slate-400 text-xs sm:text-sm">Motion graphics, Power BI dashboards &amp; high-converting social ads.</p>
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-vistora-cyan/15 text-vistora-cyan text-xs font-semibold">HD Showcase</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 space-y-4">
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-cyan-300">Select Video Reel to Play</h3>
+
+                    <div onclick="switchShowcaseVideo(0)" class="p-4 rounded-xl bg-[#091b3d] hover:bg-[#0e2654] border border-cyan-500/30 cursor-pointer transition flex items-center gap-4 group">
+                        <div class="relative w-24 h-16 rounded-lg overflow-hidden shrink-0 border border-cyan-400/30">
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&amp;fit=crop&amp;w=400&amp;q=75" alt="Tech Reel" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                <i class="fa-solid fa-play text-vistora-cyan text-sm"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-sm group-hover:text-vistora-cyan transition">1. AI &amp; Futuristic Digital Agency Reel</h4>
+                            <p class="text-slate-400 text-xs mt-1">Creative tech &amp; brand innovation showcase</p>
+                        </div>
+                    </div>
+
+                    <div onclick="switchShowcaseVideo(1)" class="p-4 rounded-xl bg-[#091b3d] hover:bg-[#0e2654] border border-cyan-500/30 cursor-pointer transition flex items-center gap-4 group">
+                        <div class="relative w-24 h-16 rounded-lg overflow-hidden shrink-0 border border-cyan-400/30">
+                            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&amp;fit=crop&amp;w=400&amp;q=75" alt="Analytics Reel" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                <i class="fa-solid fa-play text-vistora-cyan text-sm"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-sm group-hover:text-vistora-cyan transition">2. Power BI &amp; Data Analytics Walkthrough</h4>
+                            <p class="text-slate-400 text-xs mt-1">Interactive business intelligence &amp; KPI reporting</p>
+                        </div>
+                    </div>
+
+                    <div onclick="switchShowcaseVideo(2)" class="p-4 rounded-xl bg-[#091b3d] hover:bg-[#0e2654] border border-cyan-500/30 cursor-pointer transition flex items-center gap-4 group">
+                        <div class="relative w-24 h-16 rounded-lg overflow-hidden shrink-0 border border-cyan-400/30">
+                            <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&amp;fit=crop&amp;w=400&amp;q=75" alt="Social Media Reel" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                <i class="fa-solid fa-play text-vistora-cyan text-sm"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-sm group-hover:text-vistora-cyan transition">3. Social Media &amp; Advertising Motion Promo</h4>
+                            <p class="text-slate-400 text-xs mt-1">High-engagement commercial video campaign</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT & SERVICES SECTION -->
+    <section id="contact" class="py-16 sm:py-24 bg-gradient-to-b from-[#030b1c] to-[#061533] border-t border-cyan-500/15">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="w-12 h-1 bg-vistora-cyan rounded-full"></div>
+                    <h2 data-editable="true" class="font-display font-bold text-3xl sm:text-4xl text-white">
+                        Contact &amp; <span class="text-vistora-cyan">Services</span>
+                    </h2>
+                    <p data-editable="true" class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                        Looking to elevate your brand with AI, Digital Marketing, Creative Design, or Power BI Dashboards? Let's connect on LinkedIn or send a direct inquiry below.
+                    </p>
+
+                    <div class="space-y-4 pt-2">
+                        <div class="flex items-center gap-4 p-4 rounded-xl bg-[#091b3d]/80 border border-cyan-500/20">
+                            <div class="w-11 h-11 rounded-xl bg-vistora-cyan/15 text-vistora-cyan flex items-center justify-center text-lg">
+                                <i class="fa-brands fa-linkedin-in"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs text-slate-400">LinkedIn Profile / Agency</div>
+                                <a id="contactLinkedinLink" href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-white hover:text-vistora-cyan transition">
+                                    linkedin.com/in/vistora-agency
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4 p-4 rounded-xl bg-[#091b3d]/80 border border-cyan-500/20">
+                            <div class="w-11 h-11 rounded-xl bg-vistora-cyan/15 text-vistora-cyan flex items-center justify-center text-lg">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs text-slate-400">Direct Email</div>
+                                <a id="contactEmailText" href="mailto:hello@vistora-agency.com" class="text-sm font-semibold text-white hover:text-vistora-cyan transition">
+                                    hello@vistora-agency.com
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-cyan-950/40 border border-vistora-cyan/30 space-y-2.5">
+                        <div class="flex items-center gap-2 text-vistora-cyan text-xs font-bold uppercase tracking-wider">
+                            <i class="fa-solid fa-share-nodes"></i> Ready for LinkedIn Hosting
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Want to publish this site with a live link on your LinkedIn profile? Click <strong>Download Ready Site (.html)</strong> and upload it inside a folder to <strong>Netlify Drop</strong> or <strong>GitHub Pages</strong>.
+                        </p>
+                        <button onclick="exportReadyHtml()" class="w-full py-2.5 px-4 rounded-xl bg-vistora-cyan/20 hover:bg-vistora-cyan hover:text-vistora-dark border border-vistora-cyan/50 text-vistora-cyan text-xs font-bold transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-file-export"></i> Download Complete HTML File
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7">
+                    <form id="contactForm" onsubmit="handleContactSubmit(event)" class="p-6 sm:p-8 rounded-3xl bg-[#081938]/90 border border-cyan-400/25 shadow-2xl space-y-5">
+                        <h3 class="font-display font-bold text-xl text-white">Start a Project or Request a Service</h3>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1.5">Your Name *</label>
+                                <input type="text" required placeholder="e.g. Sarah Ahmed" class="w-full px-4 py-3 rounded-xl bg-[#040e24] border border-cyan-500/25 text-white text-sm focus:outline-none focus:border-vistora-cyan">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1.5">Email Address *</label>
+                                <input type="email" required placeholder="name@company.com" class="w-full px-4 py-3 rounded-xl bg-[#040e24] border border-cyan-500/25 text-white text-sm focus:outline-none focus:border-vistora-cyan">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1.5">Select Service Needed</label>
+                            <select id="serviceSelect" class="w-full px-4 py-3 rounded-xl bg-[#040e24] border border-cyan-500/25 text-white text-sm focus:outline-none focus:border-vistora-cyan">
+                                <option value="AI &amp; Technology">AI &amp; Technology Solutions</option>
+                                <option value="Digital Marketing">Digital Marketing</option>
+                                <option value="Social Media Marketing">Social Media Marketing</option>
+                                <option value="Advertising &amp; Creative Design">Advertising &amp; Creative Design</option>
+                                <option value="Microsoft Office &amp; Power BI">Microsoft Office &amp; Power BI Dashboards</option>
+                                <option value="Full Brand &amp; Portfolio Package">Full Brand &amp; Portfolio Package</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1.5">Project Details *</label>
+                            <textarea rows="4" required placeholder="Tell us about your project goals, timeline, or ideas..." class="w-full px-4 py-3 rounded-xl bg-[#040e24] border border-cyan-500/25 text-white text-sm focus:outline-none focus:border-vistora-cyan"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full py-3.5 px-6 rounded-full bg-vistora-cyan hover:bg-vistora-cyanHover text-vistora-dark font-bold text-sm sm:text-base shadow-cyan-glow transition transform hover:scale-[1.01] flex items-center justify-center gap-2">
+                            <span>Send Message</span>
+                            <i class="fa-solid fa-paper-plane text-xs"></i>
+                        </button>
+
+                        <div id="formFeedback" class="hidden p-3.5 rounded-xl bg-emerald-500/15 border border-emerald-400/40 text-emerald-300 text-xs sm:text-sm text-center font-medium">
+                            <i class="fa-solid fa-circle-check mr-1.5"></i> Thank you! Your message has been received by VISTORA.
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#020814] border-t border-cyan-500/20 pt-10 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-6 pb-8 border-b border-white/10">
+                <a href="#home" class="flex items-center gap-3">
+                    <svg viewBox="0 0 64 56" fill="none" class="w-9 h-9">
+                        <path d="M4 8H20L32 33L24 49L4 8Z" fill="#00E5FF"></path>
+                        <path d="M44 8H60L36 52H22L44 8Z" fill="#38BDF8"></path>
+                    </svg>
+                    <div class="flex flex-col">
+                        <span class="font-display font-extrabold text-xl tracking-[0.14em] text-white leading-none">VISTORA</span>
+                        <span class="text-[9px] tracking-[0.2em] text-cyan-300/80 uppercase mt-1">DIGITAL CREATIVE AGENCY</span>
+                    </div>
+                </a>
+
+                <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs sm:text-sm text-slate-300">
+                    <a href="#home" class="hover:text-vistora-cyan transition">Home</a>
+                    <span class="text-slate-600">|</span>
+                    <a href="#services" class="hover:text-vistora-cyan transition">Services</a>
+                    <span class="text-slate-600">|</span>
+                    <a href="#projects" class="hover:text-vistora-cyan transition">Our Projects</a>
+                    <span class="text-slate-600">|</span>
+                    <a href="#video-showcase" class="hover:text-vistora-cyan transition">Creative Lab</a>
+                    <span class="text-slate-600">|</span>
+                    <a href="#contact" class="hover:text-vistora-cyan transition">Contact Us</a>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <a id="socialLinkedin" href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="w-9 h-9 rounded-full bg-[#0a66c2] hover:scale-110 text-white flex items-center justify-center transition shadow-md">
+                        <i class="fa-brands fa-linkedin-in text-sm"></i>
+                    </a>
+                    <a id="socialYoutube" href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="w-9 h-9 rounded-full bg-[#ff0000] hover:scale-110 text-white flex items-center justify-center transition shadow-md">
+                        <i class="fa-brands fa-youtube text-sm"></i>
+                    </a>
+                    <a id="socialInstagram" href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 via-pink-500 to-purple-600 hover:scale-110 text-white flex items-center justify-center transition shadow-md">
+                        <i class="fa-brands fa-instagram text-sm"></i>
+                    </a>
+                    <a id="socialFacebook" href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="w-9 h-9 rounded-full bg-[#1877f2] hover:scale-110 text-white flex items-center justify-center transition shadow-md">
+                        <i class="fa-brands fa-facebook-f text-sm"></i>
+                    </a>
+                    <a id="socialX" href="https://x.com" target="_blank" rel="noopener noreferrer" aria-label="X" class="w-9 h-9 rounded-full bg-black border border-white/25 hover:scale-110 text-white flex items-center justify-center transition shadow-md">
+                        <i class="fa-brands fa-x-twitter text-sm"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+                <p data-editable="true">© 2025 VISTORA. All rights reserved.</p>
+                <p data-editable="true" class="italic text-slate-300">Let's <span class="underline decoration-vistora-cyan">Create</span> Something Different.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Chat Widget -->
+    <div class="fixed bottom-5 right-5 z-40">
+        <button onclick="toggleChatWidget()" class="bg-vistora-cyan hover:bg-vistora-cyanHover text-vistora-dark font-bold text-sm px-5 py-3 rounded-full shadow-cyan-glow transition transform hover:scale-105 flex items-center gap-2.5">
+            <i class="fa-solid fa-comment-dots text-base"></i>
+            <span>Chat with us</span>
+        </button>
+
+        <div id="chatWidget" class="hidden absolute bottom-16 right-0 w-80 sm:w-96 rounded-2xl bg-[#071736] border border-vistora-cyan/40 shadow-2xl overflow-hidden">
+            <div class="p-4 bg-gradient-to-r from-[#0a2352] to-[#061533] border-b border-cyan-500/25 flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="font-bold text-sm text-white">VISTORA Assistant</span>
+                </div>
+                <button onclick="toggleChatWidget()" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="chatMessages" class="p-4 h-56 overflow-y-auto space-y-3 text-xs">
+                <div class="p-3 rounded-xl bg-[#0c2452] text-slate-100 border border-cyan-500/20">
+                    👋 Welcome to <strong>VISTORA</strong>! Ask about our services (AI, Marketing, Power BI, Design) or fill out the contact form below.
+                </div>
+            </div>
+            <div class="p-3 border-t border-cyan-500/20 bg-[#040e24] flex gap-2">
+                <input id="chatInput" type="text" placeholder="Ask a question..." onkeypress="if(event.key==='Enter') sendChatMsg()" class="flex-1 px-3 py-2 rounded-lg bg-[#091c40] border border-cyan-500/25 text-white text-xs focus:outline-none focus:border-vistora-cyan">
+                <button onclick="sendChatMsg()" class="px-3.5 py-2 rounded-lg bg-vistora-cyan text-vistora-dark font-bold text-xs">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 1: HERO VIDEO MODAL -->
+    <div id="videoModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="relative w-full max-w-4xl rounded-2xl bg-[#071736] border border-vistora-cyan/40 overflow-hidden shadow-2xl">
+            <div class="flex items-center justify-between px-5 py-3.5 border-b border-cyan-500/20">
+                <span class="font-bold text-white text-sm sm:text-base flex items-center gap-2">
+                    <i class="fa-solid fa-play-circle text-vistora-cyan"></i> VISTORA Agency Showreel
+                </span>
+                <button onclick="closeVideoModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-vistora-cyan hover:text-vistora-dark text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="aspect-video bg-black">
+                <video id="modalVideoPlayer" class="w-full h-full" controls>
+                    <source src="https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-futuristic-devices-99786-large.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: PROJECT / SERVICE DETAIL LIGHTBOX -->
+    <div id="detailModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="relative w-full max-w-2xl rounded-3xl bg-[#071838] border border-vistora-cyan/40 overflow-hidden shadow-2xl">
+            <button onclick="closeDetailModal()" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-black/60 hover:bg-vistora-cyan hover:text-vistora-dark text-white flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="detailModalContent"></div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: MEDIA, VIDEO & SOCIAL LINKS CUSTOMIZER -->
+    <div id="mediaManagerModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="w-full max-w-2xl rounded-3xl bg-[#071838] border border-vistora-cyan/50 p-6 sm:p-8 shadow-2xl my-8 space-y-5">
+            <div class="flex items-center justify-between border-b border-cyan-500/20 pb-3">
+                <h3 class="font-display font-bold text-xl text-white flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-vistora-cyan"></i> Customize Links, Videos &amp; Images
+                </h3>
+                <button onclick="closeMediaManagerModal()" class="text-slate-400 hover:text-white text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4 text-xs sm:text-sm max-h-[65vh] overflow-y-auto pr-1">
+                <div>
+                    <label class="block text-cyan-300 font-semibold mb-1">Your LinkedIn URL</label>
+                    <input id="inputLinkedinUrl" type="url" value="https://www.linkedin.com" placeholder="https://www.linkedin.com/in/your-profile" class="w-full px-3.5 py-2.5 rounded-xl bg-[#040e24] border border-cyan-500/30 text-white">
+                </div>
+
+                <div>
+                    <label class="block text-cyan-300 font-semibold mb-1">Your Contact Email</label>
+                    <input id="inputContactEmail" type="email" value="hello@vistora-agency.com" class="w-full px-3.5 py-2.5 rounded-xl bg-[#040e24] border border-cyan-500/30 text-white">
+                </div>
+
+                <div>
+                    <label class="block text-cyan-300 font-semibold mb-1">Featured Showreel Video URL (.mp4 link)</label>
+                    <input id="inputVideoUrl" type="url" value="https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-futuristic-devices-99786-large.mp4" class="w-full px-3.5 py-2.5 rounded-xl bg-[#040e24] border border-cyan-500/30 text-white">
+                </div>
+
+                <div>
+                    <label class="block text-cyan-300 font-semibold mb-1">Hero Workspace Image URL</label>
+                    <input id="inputHeroImg" type="url" value="https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" class="w-full px-3.5 py-2.5 rounded-xl bg-[#040e24] border border-cyan-500/30 text-white">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-slate-300 font-medium mb-1">YouTube Link</label>
+                        <input id="inputYoutubeUrl" type="url" value="https://www.youtube.com" class="w-full px-3 py-2 rounded-xl bg-[#040e24] border border-cyan-500/25 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-slate-300 font-medium mb-1">Instagram Link</label>
+                        <input id="inputInstagramUrl" type="url" value="https://www.instagram.com" class="w-full px-3 py-2 rounded-xl bg-[#040e24] border border-cyan-500/25 text-white">
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-cyan-500/20 flex flex-wrap justify-end gap-3">
+                <button onclick="closeMediaManagerModal()" class="px-5 py-2.5 rounded-full border border-slate-600 text-slate-300 text-xs font-semibold hover:bg-white/5">
+                    Cancel
+                </button>
+                <button onclick="applyMediaSettings()" class="px-6 py-2.5 rounded-full bg-vistora-cyan text-vistora-dark font-bold text-xs shadow-cyan-sm hover:bg-vistora-cyanHover">
+                    Save &amp; Apply Changes
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const projectsData = [
+            {
+                id: 1,
+                tag: 'Branding',
+                category: 'branding',
+                title: 'Luxury Fragrance Visual Identity',
+                client: 'Aurelia Parfums',
+                image: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&amp;fit=crop&amp;w=900&amp;q=80',
+                videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-woman-applying-perfume-on-her-neck-39879-large.mp4',
+                summary: 'Complete luxury branding, product art direction, and high-converting social media campaign visuals.',
+                metrics: '+240% Engagement | Full Brand Kit'
+            },
+            {
+                id: 2,
+                tag: 'Fashion',
+                category: 'branding',
+                title: 'Modern Apparel Lookbook & Ad Campaign',
+                client: 'Nordic Threads',
+                image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&amp;fit=crop&amp;w=900&amp;q=80',
+                videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-clothes-hanging-on-a-rack-in-a-store-41768-large.mp4',
+                summary: 'End-to-end e-commerce creative direction, seasonal lookbook photography, and Instagram/Facebook ad creatives.',
+                metrics: '3.8x ROAS | Omnichannel Launch'
+            },
+            {
+                id: 3,
+                tag: 'Analytics Dashboard',
+                category: 'analytics',
+                title: 'Executive Power BI & Excel Sales Suite',
+                client: 'FinCore Global',
+                image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&amp;fit=crop&amp;w=900&amp;q=80',
+                videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-business-analysis-graphs-on-a-computer-screen-23002-large.mp4',
+                summary: 'Interactive Power BI executive dashboard and automated Microsoft Excel KPI reporting model for real-time revenue tracking.',
+                metrics: '85% Faster Reporting | Live KPIs'
+            },
+            {
+                id: 4,
+                tag: 'Digital Marketing',
+                category: 'marketing',
+                title: '360° Digital & Social Media Growth Engine',
+                client: 'NovaTech Solutions',
+                image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&amp;fit=crop&amp;w=900&amp;q=80',
+                videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-futuristic-devices-99786-large.mp4',
+                summary: 'Multi-channel LinkedIn B2B lead generation, SEO content funnel, and targeted paid social campaigns.',
+                metrics: '+310% Qualified Leads in 90 Days'
+            },
+            {
+                id: 5,
+                tag: 'Accessories',
+                category: 'branding',
+                title: 'Timeless Eyewear & Watch Ad Creative',
+                client: 'Chronos Studio',
+                image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&amp;fit=crop&amp;w=900&amp;q=80',
+                videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-close-up-of-a-luxury-watch-mechanism-42431-large.mp4',
+                summary: 'High-contrast product photography, digital catalog design, and social video reels for premium accessories.',
+                metrics: '1.9M Video Views | +62% CTR'
+            },
+            {
+                id: 6,
+                tag: 'AI & Technology',
+                category: 'ai',
+                title: 'AI-Powered Content & Automation Workflow',
+                client: 'VISTORA Creative Lab',
+                image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&amp;fit=crop&amp;w=900&amp;q=80',
+                videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-futuristic-devices-99786-large.mp4',
+                summary: 'Generative AI visual production, smart customer chat automation, and AI-assisted marketing analytics.',
+                metrics: '5x Content Velocity | Smart AI'
+            }
+        ];
+
+        const servicesDetails = [
+            {
+                title: 'AI & Technology',
+                icon: 'fa-microchip',
+                description: 'We integrate cutting-edge Artificial Intelligence tools, automated workflows, AI visual generation, and modern web technologies to future-proof your business.',
+                deliverables: ['AI Content & Visual Generation', 'Workflow & Chatbot Automation', 'Prompt Engineering & AI Strategy', 'Modern Web & Landing Pages']
+            },
+            {
+                title: 'Digital Marketing',
+                icon: 'fa-chart-line',
+                description: 'Data-backed digital marketing campaigns designed to maximize ROI, boost search visibility, and convert traffic into loyal customers.',
+                deliverables: ['Search Engine Optimization (SEO)', 'Google Ads & Performance Campaigns', 'Conversion Rate Optimization', 'Marketing Funnel Architecture']
+            },
+            {
+                title: 'Social Media Marketing',
+                icon: 'fa-bullhorn',
+                description: 'Strategic content creation, community management, and paid social advertising tailored for LinkedIn, Instagram, Facebook, and YouTube.',
+                deliverables: ['LinkedIn Personal & Company Branding', 'Content Calendars & Reels Strategy', 'Paid Social Ad Management', 'Audience Growth & Analytics']
+            },
+            {
+                title: 'Advertising & Creative Design',
+                icon: 'fa-palette',
+                description: 'Eye-catching visual identities, advertising campaigns, motion graphics, and commercial designs that make your brand unforgettable.',
+                deliverables: ['Brand Identity & Logo Systems', 'Social Media & Ad Creatives', 'Brochures, Posters & Packaging', 'Promotional Motion Videos']
+            },
+            {
+                title: 'Microsoft Office & Power BI',
+                icon: 'fa-chart-column',
+                description: 'Transform complex spreadsheets into crystal-clear interactive Power BI dashboards, automated Excel financial models, and executive PowerPoint decks.',
+                deliverables: ['Interactive Power BI Dashboards', 'Advanced Excel Automation & Modeling', 'Executive PowerPoint Pitch Decks', 'KPI Tracking & Data Storytelling']
+            }
+        ];
+
+        const videoPlaylist = [
+            {
+                title: 'VISTORA Digital & AI Showreel 2025',
+                desc: 'Motion graphics, Power BI dashboards & high-converting social ads.',
+                src: 'https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-futuristic-devices-99786-large.mp4',
+                poster: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&amp;fit=crop&amp;w=1200&amp;q=80'
+            },
+            {
+                title: 'Power BI & Data Analytics Walkthrough',
+                desc: 'Interactive business intelligence dashboards & automated Microsoft Office KPI reporting.',
+                src: 'https://assets.mixkit.co/videos/preview/mixkit-business-analysis-graphs-on-a-computer-screen-23002-large.mp4',
+                poster: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&amp;fit=crop&amp;w=1200&amp;q=80'
+            },
+            {
+                title: 'Social Media & Advertising Motion Promo',
+                desc: 'High-engagement visual storytelling for LinkedIn, Instagram & digital campaigns.',
+                src: 'https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-man-playing-on-a-computer-43527-large.mp4',
+                poster: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&amp;fit=crop&amp;w=1200&amp;q=80'
+            }
+        ];
+
+        let currentFilter = 'all';
+        let showAllItems = false;
+
+        function renderProjects() {
+            const grid = document.getElementById('projectsGrid');
+            const filtered = currentFilter === 'all'
+                ? projectsData
+                : projectsData.filter(p => p.category === currentFilter);
+
+            const visibleItems = showAllItems ? filtered : filtered.slice(0, 5);
+
+            grid.innerHTML = visibleItems.map(project => `
+                <div onclick="openProjectModal(${project.id})" class="group relative rounded-2xl overflow-hidden border border-cyan-500/25 hover:border-vistora-cyan bg-[#071736] cursor-pointer shadow-lg hover:shadow-card-hover transition-all duration-300">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="${project.image}"
+                             onerror="this.src='https://placehold.co/800x500/071a3e/00e5ff?text=${encodeURIComponent(project.tag)}'"
+                             alt="${project.title}"
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#030b1c] via-[#030b1c]/30 to-transparent"></div>
+
+                        <span class="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/60 backdrop-blur-md border border-vistora-cyan/50 text-vistora-cyan flex items-center justify-center group-hover:bg-vistora-cyan group-hover:text-vistora-dark transition">
+                            <i class="fa-solid fa-play text-xs ml-0.5"></i>
+                        </span>
+
+                        <span class="absolute bottom-3 left-3 px-3.5 py-1 rounded-lg bg-black/75 backdrop-blur-md border border-white/15 text-white text-xs font-semibold">
+                            ${project.tag}
+                        </span>
+                    </div>
+                    <div class="p-4 flex items-center justify-between">
+                        <div>
+                            <h3 class="font-bold text-white text-sm sm:text-base group-hover:text-vistora-cyan transition">${project.title}</h3>
+                            <p class="text-xs text-slate-400 mt-0.5">${project.metrics}</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-cyan-400 text-xs opacity-75 group-hover:opacity-100"></i>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterProjects(category, btn) {
+            currentFilter = category;
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.classList.remove('bg-vistora-cyan', 'text-vistora-dark', 'shadow-cyan-sm');
+                b.classList.add('bg-[#0a1c3f]', 'text-slate-300');
+            });
+            btn.classList.remove('bg-[#0a1c3f]', 'text-slate-300');
+            btn.classList.add('bg-vistora-cyan', 'text-vistora-dark', 'shadow-cyan-sm');
+            renderProjects();
+        }
+
+        function toggleExtraProjects() {
+            showAllItems = !showAllItems;
+            document.getElementById('viewAllText').textContent = showAllItems ? 'Show Compact View' : 'View All Projects';
+            renderProjects();
+        }
+
+        function openProjectModal(id) {
+            const p = projectsData.find(item => item.id === id);
+            if (!p) return;
+
+            const content = document.getElementById('detailModalContent');
+            content.innerHTML = `
+                <div class="aspect-video bg-black relative">
+                    <video class="w-full h-full object-cover" controls autoplay poster="${p.image}">
+                        <source src="${p.videoUrl}" type="video/mp4">
+                    </video>
+                </div>
+                <div class="p-6 space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <span class="px-3 py-1 rounded-full bg-vistora-cyan/15 text-vistora-cyan text-xs font-bold">${p.tag}</span>
+                        <span class="text-xs text-slate-400">Client: <strong class="text-white">${p.client}</strong></span>
+                    </div>
+                    <h3 class="font-display font-bold text-xl sm:text-2xl text-white">${p.title}</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed">${p.summary}</p>
+                    <div class="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-cyan-500/20">
+                        <span class="text-xs font-semibold text-emerald-400"><i class="fa-solid fa-chart-simple mr-1"></i> ${p.metrics}</span>
+                        <a href="#contact" onclick="closeDetailModal(); selectServiceFromModal('${p.tag}')" class="px-5 py-2 rounded-full bg-vistora-cyan text-vistora-dark font-bold text-xs hover:bg-vistora-cyanHover transition">
+                            Request Similar Project
+                        </a>
+                    </div>
+                </div>
+            `;
+            document.getElementById('detailModal').classList.remove('hidden');
+        }
+
+        function openServiceDetail(index) {
+            const s = servicesDetails[index];
+            if (!s) return;
+
+            const content = document.getElementById('detailModalContent');
+            content.innerHTML = `
+                <div class="p-6 sm:p-8 space-y-5">
+                    <div class="w-14 h-14 rounded-2xl bg-vistora-cyan/15 border border-vistora-cyan/40 flex items-center justify-center text-vistora-cyan text-2xl">
+                        <i class="fa-solid ${s.icon}"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-display font-bold text-2xl text-white">${s.title}</h3>
+                        <p class="text-slate-300 text-sm mt-2 leading-relaxed">${s.description}</p>
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-vistora-cyan">Key Deliverables</h4>
+                        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            ${s.deliverables.map(d => `
+                                <li class="flex items-center gap-2 text-xs sm:text-sm text-slate-200 bg-[#040e24] p-2.5 rounded-xl border border-cyan-500/20">
+                                    <i class="fa-solid fa-circle-check text-vistora-cyan"></i> ${d}
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                    <div class="pt-3 flex justify-end">
+                        <a href="#contact" onclick="closeDetailModal(); selectServiceFromModal('${s.title}')" class="px-6 py-2.5 rounded-full bg-vistora-cyan text-vistora-dark font-bold text-xs sm:text-sm shadow-cyan-sm hover:bg-vistora-cyanHover transition">
+                            Book This Service
+                        </a>
+                    </div>
+                </div>
+            `;
+            document.getElementById('detailModal').classList.remove('hidden');
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.add('hidden');
+            document.getElementById('detailModalContent').innerHTML = '';
+        }
+
+        function selectServiceFromModal(serviceName) {
+            const select = document.getElementById('serviceSelect');
+            for (let i = 0; i < select.options.length; i++) {
+                if (select.options[i].value.toLowerCase().includes(serviceName.toLowerCase())) {
+                    select.selectedIndex = i;
+                    break;
+                }
+            }
+        }
+
+        function switchShowcaseVideo(idx) {
+            const item = videoPlaylist[idx];
+            if (!item) return;
+            const videoEl = document.getElementById('featuredShowcaseVideo');
+            const sourceEl = document.getElementById('featuredVideoSource');
+            document.getElementById('featuredVideoTitle').textContent = item.title;
+            document.getElementById('featuredVideoDesc').textContent = item.desc;
+            videoEl.poster = item.poster;
+            sourceEl.src = item.src;
+            videoEl.load();
+            videoEl.play().catch(() => {});
+        }
+
+        function openVideoModal() {
+            const modal = document.getElementById('videoModal');
+            const player = document.getElementById('modalVideoPlayer');
+            modal.classList.remove('hidden');
+            player.play().catch(() => {});
+        }
+
+        function closeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            const player = document.getElementById('modalVideoPlayer');
+            player.pause();
+            modal.classList.add('hidden');
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        }
+
+        let isEditMode = false;
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const banner = document.getElementById('editBanner');
+            const header = document.getElementById('mainHeader');
+            const editables = document.querySelectorAll('[data-editable="true"]');
+
+            if (isEditMode) {
+                document.body.classList.add('edit-mode-active');
+                banner.classList.remove('hidden');
+                header.style.top = '44px';
+                editables.forEach(el => el.setAttribute('contenteditable', 'true'));
+            } else {
+                document.body.classList.remove('edit-mode-active');
+                banner.classList.add('hidden');
+                header.style.top = '0px';
+                editables.forEach(el => el.removeAttribute('contenteditable'));
+            }
+        }
+
+        function openMediaManagerModal() {
+            document.getElementById('mediaManagerModal').classList.remove('hidden');
+        }
+
+        function closeMediaManagerModal() {
+            document.getElementById('mediaManagerModal').classList.add('hidden');
+        }
+
+        function applyMediaSettings() {
+            const linkedinUrl = document.getElementById('inputLinkedinUrl').value.trim();
+            const emailVal = document.getElementById('inputContactEmail').value.trim();
+            const videoUrl = document.getElementById('inputVideoUrl').value.trim();
+            const heroImgUrl = document.getElementById('inputHeroImg').value.trim();
+            const youtubeUrl = document.getElementById('inputYoutubeUrl').value.trim();
+            const instagramUrl = document.getElementById('inputInstagramUrl').value.trim();
+
+            if (linkedinUrl) {
+                document.getElementById('socialLinkedin').href = linkedinUrl;
+                const contactLi = document.getElementById('contactLinkedinLink');
+                contactLi.href = linkedinUrl;
+                contactLi.textContent = linkedinUrl.replace(/^https?:\/\/(www\.)?/, '');
+            }
+            if (emailVal) {
+                const emailEl = document.getElementById('contactEmailText');
+                emailEl.href = 'mailto:' + emailVal;
+                emailEl.textContent = emailVal;
+            }
+            if (videoUrl) {
+                document.getElementById('featuredVideoSource').src = videoUrl;
+                document.getElementById('featuredShowcaseVideo').load();
+                document.querySelector('#modalVideoPlayer source').src = videoUrl;
+                document.getElementById('modalVideoPlayer').load();
+            }
+            if (heroImgUrl) {
+                document.getElementById('heroWorkspaceImg').src = heroImgUrl;
+            }
+            if (youtubeUrl) document.getElementById('socialYoutube').href = youtubeUrl;
+            if (instagramUrl) document.getElementById('socialInstagram').href = instagramUrl;
+
+            closeMediaManagerModal();
+        }
+
+        function exportReadyHtml() {
+            const wasEditing = isEditMode;
+            if (wasEditing) toggleEditMode();
+
+            const docClone = document.documentElement.cloneNode(true);
+            const editBannerClone = docClone.querySelector('#editBanner');
+            if (editBannerClone) editBannerClone.classList.add('hidden');
+
+            const fullHtml = '<!DOCTYPE html>
+' + docClone.outerHTML;
+            const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'index.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            if (wasEditing) toggleEditMode();
+        }
+
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            const feedback = document.getElementById('formFeedback');
+            feedback.classList.remove('hidden');
+            e.target.reset();
+            setTimeout(() => feedback.classList.add('hidden'), 5000);
+        }
+
+        function toggleChatWidget() {
+            document.getElementById('chatWidget').classList.toggle('hidden');
+        }
+
+        function sendChatMsg() {
+            const input = document.getElementById('chatInput');
+            const box = document.getElementById('chatMessages');
+            const text = input.value.trim();
+            if (!text) return;
+
+            box.innerHTML += `<div class="p-2.5 rounded-xl bg-vistora-cyan text-vistora-dark font-medium ml-8">${text}</div>`;
+            input.value = '';
+
+            setTimeout(() => {
+                box.innerHTML += `<div class="p-2.5 rounded-xl bg-[#0c2452] text-slate-100 border border-cyan-500/20 mr-6">Thanks for reaching out! You can explore our 7 services above or fill out the <a href="#contact" onclick="toggleChatWidget()" class="text-vistora-cyan underline">Contact Form</a> to connect directly.</div>`;
+                box.scrollTop = box.scrollHeight;
+            }, 500);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderProjects();
+        });
+    </script>
+
+</body>
+</html>
