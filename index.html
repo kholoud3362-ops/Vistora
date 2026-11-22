@@ -1175,7 +1175,8 @@
             const editBannerClone = docClone.querySelector('#editBanner');
             if (editBannerClone) editBannerClone.classList.add('hidden');
 
-            const fullHtml = '<!DOCTYPE html>\n' + docClone.outerHTML;
+            const fullHtml = '<!DOCTYPE html>
+' + docClone.outerHTML;
             const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
